@@ -3,70 +3,69 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sia-Chat Video Call</title>
+<title>Sia-Chat Super App</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:system-ui}
-body{background:#0f0f0f;color:#fff;min-height:100vh;display:flex;flex-direction:column}
-header{background:#1a1a1a;padding:12px 16px;display:flex;align-items:center;gap:12px;border-bottom:1px solid #333}
-.logo{width:40px;height:40px;background:#ff0050;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900}
-.header-info{flex:1}
-.header-info h1{font-size:16px}
-.header-info p{font-size:12px;color:#0f0}
-main{flex:1;display:flex;flex-direction:column;padding:10px;gap:10px}
-.videos{display:grid;grid-template-columns:1fr 1fr;gap:10px;height:55vh}
-.video-box{background:#1e1e1e;border-radius:12px;position:relative;overflow:hidden;border:1px solid #333}
-video{width:100%;height:100%;object-fit:cover;background:#000}
-.label{position:absolute;bottom:8px;left:8px;background:rgba(0,0,0,0.7);padding:4px 10px;border-radius:20px;font-size:12px}
-.controls{display:flex;justify-content:center;gap:14px;padding:16px;background:#1a1a1a;border-top:1px solid #333}
-.btn{width:54px;height:54px;border-radius:50%;border:none;font-size:22px;display:flex;align-items:center;justify-content:center;cursor:pointer}
-.btn-call{background:#00c853;color:#fff}
-.btn-end{background:#ff1744;color:#fff}
-.btn-mute{background:#333;color:#fff}
-.btn-off{background:#555 !important}
-.room-box{background:#1e1e1e;padding:12px;border-radius:10px;display:flex;gap:8px;align-items:center}
-.room-box input{flex:1;background:#000;border:1px solid #333;color:#fff;padding:10px;border-radius:8px}
-.room-box button{background:#ff0050;color:#fff;border:none;padding:10px 14px;border-radius:8px;font-weight:bold}
-.chat{background:#1e1e1e;border-radius:10px;padding:10px;height:22vh;overflow:auto}
-.msg{margin:6px 0;font-size:13px}
+body{background:#111b21;color:#e9edef;min-height:100vh;display:flex;flex-direction:column}
+header{background:#202c33;padding:10px 14px;display:flex;align-items:center;gap:10px}
+.logo{width:40px;height:40px;background:#00a884;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900}
+.hinfo{flex:1}.hinfo h1{font-size:16px}.hinfo p{font-size:11px;color:#00a884}
+.tabs{display:flex;background:#202c33;border-bottom:1px solid #2a3942}
+.tab{flex:1;padding:12px;text-align:center;font-size:13px;font-weight:700;color:#8696a0;cursor:pointer;border-bottom:3px solid transparent}
+.tab.active{color:#00a884;border-bottom-color:#00a884}
+.view{display:none;flex:1;flex-direction:column;overflow:hidden}.view.active{display:flex}
+.search{background:#202c33;padding:8px 12px}.search input{width:100%;background:#2a3942;border:none;color:#fff;padding:10px 12px;border-radius:8px;outline:none}
+.chat-list{flex:1;overflow:auto}
+.chat-item{display:flex;gap:12px;padding:12px;border-bottom:1px solid #2a3942;cursor:pointer}
+.avatar{width:48px;height:48px;background:#00a884;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;color:#fff}
+.ci-info{flex:1}.ci-name{font-weight:600;font-size:15px}.ci-time{font-size:11px;color:#8696a0;float:right}.ci-last{font-size:13px;color:#8696a0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.login{position:fixed;inset:0;background:#111b21;z-index:100;display:flex;align-items:center;justify-content:center;padding:20px}
+.login-box{background:#202c33;padding:24px;border-radius:12px;width:100%;max-width:360px}.login-box input{width:100%;padding:12px;border-radius:8px;border:1px solid #2a3942;background:#2a3942;color:#fff;margin-bottom:10px}.login-box button{width:100%;padding:12px;background:#00a884;color:#fff;border:none;border-radius:8px;font-weight:700}
+.chat-window{position:fixed;inset:0;background:#0b141a;z-index:50;display:none;flex-direction:column}.chat-window.open{display:flex}
+.cw-header{background:#202c33;padding:10px 12px;display:flex;align-items:center;gap:10px}.back{font-size:22px;cursor:pointer}
+.messages{flex:1;overflow:auto;padding:12px;display:flex;flex-direction:column;gap:6px}
+.bubble{max-width:75%;padding:8px 10px;border-radius:8px;font-size:14px}.me{align-self:flex-end;background:#005c4b;color:#e9edef}.other{align-self:flex-start;background:#202c33}
+.time{font-size:10px;color:#8696a0;display:block;text-align:right;margin-top:4px}
+.input-area{display:flex;gap:8px;padding:8px;background:#202c33}.input-area input{flex:1;background:#2a3942;border:none;color:#fff;padding:12px;border-radius:24px;outline:none}.input-area button{background:#00a884;color:#fff;border:none;width:44px;height:44px;border-radius:50%}
+.videos{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:10px;height:38vh}.vbox{background:#202c33;border-radius:12px;overflow:hidden;position:relative;border:1px solid #2a3942}.vbox video{width:100%;height:100%;object-fit:cover;background:#000}.vlabel{position:absolute;bottom:6px;left:6px;background:rgba(0,0,0,0.6);padding:3px 8px;border-radius:12px;font-size:11px}
+.room-box{margin:10px;padding:10px;background:#202c33;border-radius:10px;display:flex;gap:8px}.room-box input{flex:1;background:#2a3942;border:none;color:#fff;padding:10px;border-radius:8px}.room-box button{background:#00a884;color:#fff;border:none;padding:10px 14px;border-radius:8px;font-weight:700}
+.controls{display:flex;justify-content:center;gap:16px;padding:14px;background:#202c33}.cbtn{width:52px;height:52px;border-radius:50%;border:none;font-size:20px;display:flex;align-items:center;justify-content:center}
+.call{background:#00a884;color:#fff}.end{background:#f15c6d;color:#fff}.mute{background:#2a3942;color:#fff}
+.share-bar{padding:8px 12px;background:#182229;display:flex;justify-content:space-between;align-items:center;font-size:12px;color:#8696a0}.share-bar button{background:#2a3942;color:#00a884;border:none;padding:6px 10px;border-radius:6px}
 </style>
 </head>
 <body>
-<header>
-<div class="logo">SC</div>
-<div class="header-info"><h1>Sia-Chat Video Call</h1><p id="status">Ready</p></div>
-</header>
-<main>
-<div class="room-box">
-<input id="roomInput" placeholder="Enter room name e.g. siya123">
-<button onclick="joinRoom()">JOIN</button>
-</div>
-<div class="videos">
-<div class="video-box"><video id="localVideo" autoplay muted playsinline></video><div class="label">You</div></div>
-<div class="video-box"><video id="remoteVideo" autoplay playsinline></video><div class="label">Friend</div></div>
-</div>
-<div class="chat" id="chatBox"><div class="msg">Welcome! Enter room name and JOIN</div></div>
-</main>
-<div class="controls">
-<button class="btn btn-mute" id="muteBtn" onclick="toggleMute()">Mic</button>
-<button class="btn btn-call" onclick="startCall()">Call</button>
-<button class="btn btn-end" onclick="endCall()">End</button>
-<button class="btn btn-mute" onclick="toggleCamera()">Cam</button>
-</div>
+<header><div class="logo">SC</div><div class="hinfo"><h1>Sia-Chat Super</h1><p id="userStatus">● Offline Ready</p></div></header>
+<div class="tabs"><div class="tab active" onclick="switchTab('chats')">CHATS</div><div class="tab" onclick="switchTab('find')">FIND</div><div class="tab" onclick="switchTab('video')">VIDEO CALL</div></div>
+<div class="share-bar"><span>siyabongast25-ai.github.io/Sia-Chat/</span><button onclick="shareApp()">Share</button></div>
+<div id="view-chats" class="view active"><div class="search"><input id="searchInput" placeholder="Search chats..." oninput="renderChats()"></div><div class="chat-list" id="chatList"></div></div>
+<div id="view-find" class="view"><div class="search"><input id="searchFind" placeholder="Search people..." oninput="renderFind()"></div><div class="chat-list" id="findList"></div></div>
+<div id="view-video" class="view"><div class="room-box"><input id="roomInput" placeholder="Room name e.g. siya123"><button onclick="joinRoom()">JOIN</button></div><div class="videos"><div class="vbox"><video id="localVideo" autoplay muted playsinline></video><div class="vlabel">You</div></div><div class="vbox"><video id="remoteVideo" autoplay playsinline></video><div class="vlabel">Friend</div></div></div><div class="controls"><button class="cbtn mute" onclick="toggleMute()">🎤</button><button class="cbtn call" onclick="startCall()">📞</button><button class="cbtn end" onclick="endCall()">❌</button><button class="cbtn mute" onclick="toggleCamera()">📷</button></div><div style="padding:10px;font-size:12px;color:#8696a0;text-align:center" id="videoStatus">Enter room and JOIN - Allow camera</div></div>
+<div class="login" id="loginScreen"><div class="login-box"><h2>Welcome to Sia-Chat</h2><input id="nameInput" placeholder="Your name e.g. Siyabonga"><input id="statusInput" placeholder="Status e.g. Northam - Limpopo" value="Northam - Limpopo"><button onclick="doLogin()">START CHATTING</button><p style="font-size:11px;color:#8696a0;margin-top:10px">Works offline! No data needed after first open.</p></div></div>
+<div class="chat-window" id="chatWindow"><div class="cw-header"><span class="back" onclick="closeChat()">←</span><div class="avatar" id="cwAvatar">S</div><div><div id="cwName" style="font-weight:700">Chat</div><div style="font-size:11px;color:#8696a0" id="cwSub">Offline</div></div></div><div class="messages" id="messages"></div><div class="input-area"><input id="msgInput" placeholder="Type message..." onkeydown="if(event.key==='Enter')sendMsg()"><button onclick="sendMsg()">➤</button></div></div>
 <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
 <script>
-let localStream,peer,call,roomId,isMuted=false,camOff=false;
-const localVideo=document.getElementById('localVideo');
-const remoteVideo=document.getElementById('remoteVideo');
-const statusEl=document.getElementById('status');
-const chatBox=document.getElementById('chatBox');
-function log(m){const d=document.createElement('div');d.className='msg';d.textContent=m;chatBox.appendChild(d);chatBox.scrollTop=chatBox.scrollHeight;}
-async function getMedia(){try{localStream=await navigator.mediaDevices.getUserMedia({video:true,audio:true});localVideo.srcObject=localStream;log('Camera ready');}catch(e){log('Camera error: '+e.message);}}
-getMedia();
-function joinRoom(){roomId=document.getElementById('roomInput').value.trim();if(!roomId){alert('Enter room name!');return;}peer=new Peer('sia-'+roomId,{config:{iceServers:[{urls:'stun:stun.l.google.com:19302'}]}});peer.on('open',id=>{log('Joined room: '+roomId);statusEl.textContent='In room: '+roomId;});peer.on('call',c=>{call=c;call.answer(localStream);call.on('stream',s=>{remoteVideo.srcObject=s;log('Friend connected!');statusEl.textContent='Connected!';});});}
-function startCall(){if(!peer){alert('Join room first!');return;}log('Calling...');const c=peer.call('sia-'+roomId,localStream);c.on('stream',s=>{remoteVideo.srcObject=s;log('Call connected!');statusEl.textContent='In Call!';});}
-function endCall(){if(call)call.close();remoteVideo.srcObject=null;log('Call ended');}
-function toggleMute(){isMuted=!isMuted;localStream.getAudioTracks().forEach(t=>t.enabled=!isMuted);log(isMuted?'Muted':'Unmuted');}
-function toggleCamera(){camOff=!camOff;localStream.getVideoTracks().forEach(t=>t.enabled=!camOff);log(camOff?'Camera off':'Camera on');}
+let user=JSON.parse(localStorage.getItem('sia_user')||'null');let contacts=JSON.parse(localStorage.getItem('sia_contacts')||'null');let allMessages=JSON.parse(localStorage.getItem('sia_msgs')||'{}');let currentChatId=null;
+if(!contacts){contacts=[{id:'sia_group',name:'Sia Group',avatar:'SG',last:'Welcome to Sia-Chat Super App!'},{id:'mama',name:'Mama',avatar:'M',last:'Dumela ngwanaka'},{id:'bestie',name:'Bestie',avatar:'B',last:'Sharp!'},{id:'papa',name:'Papa',avatar:'P',last:'How are you?'},{id:'sister',name:'Sister',avatar:'S',last:'Call me later'}];localStorage.setItem('sia_contacts',JSON.stringify(contacts));}
+function saveAll(){localStorage.setItem('sia_msgs',JSON.stringify(allMessages));localStorage.setItem('sia_contacts',JSON.stringify(contacts));}
+function doLogin(){let n=document.getElementById('nameInput').value.trim();let s=document.getElementById('statusInput').value.trim();if(!n){alert('Enter name');return;}user={name:n,status:s};localStorage.setItem('sia_user',JSON.stringify(user));document.getElementById('loginScreen').style.display='none';document.getElementById('userStatus').textContent='● '+n+' - '+s;renderChats();renderFind();}
+if(user){document.getElementById('loginScreen').style.display='none';document.getElementById('userStatus').textContent='● '+user.name+' - '+user.status;}
+function switchTab(t){document.querySelectorAll('.tab').forEach(e=>e.classList.remove('active'));document.querySelectorAll('.view').forEach(e=>e.classList.remove('active'));if(t==='chats'){document.querySelectorAll('.tab')[0].classList.add('active');document.getElementById('view-chats').classList.add('active');}if(t==='find'){document.querySelectorAll('.tab')[1].classList.add('active');document.getElementById('view-find').classList.add('active');renderFind();}if(t==='video'){document.querySelectorAll('.tab')[2].classList.add('active');document.getElementById('view-video').classList.add('active');}}
+function renderChats(){let q=(document.getElementById('searchInput').value||'').toLowerCase();let list=document.getElementById('chatList');list.innerHTML='';contacts.forEach(c=>{if(q&&!c.name.toLowerCase().includes(q))return;let msgs=allMessages[c.id]||[];let last=msgs.length?msgs[msgs.length-1].text:c.last;let time=msgs.length?msgs[msgs.length-1].time:'';let div=document.createElement('div');div.className='chat-item';div.onclick=()=>openChat(c.id);div.innerHTML=`<div class="avatar">${c.avatar}</div><div class="ci-info"><div class="ci-top"><span class="ci-name">${c.name}</span><span class="ci-time">${time}</span></div><div class="ci-last">${last}</div></div>`;list.appendChild(div);});}
+function renderFind(){let q=(document.getElementById('searchFind').value||'').toLowerCase();let list=document.getElementById('findList');list.innerHTML='';contacts.forEach(c=>{if(c.id==='sia_group')return;if(q&&!c.name.toLowerCase().includes(q))return;let div=document.createElement('div');div.className='chat-item';div.onclick=()=>openChat(c.id);div.innerHTML=`<div class="avatar">${c.avatar}</div><div class="ci-info"><div class="ci-top"><span class="ci-name">${c.name}</span></div><div class="ci-last">Tap to chat with ${c.name} - Offline ready</div></div>`;list.appendChild(div);});}
+function openChat(id){currentChatId=id;let c=contacts.find(x=>x.id===id);document.getElementById('cwName').textContent=c.name;document.getElementById('cwAvatar').textContent=c.avatar;document.getElementById('chatWindow').classList.add('open');renderMessages();}
+function closeChat(){document.getElementById('chatWindow').classList.remove('open');currentChatId=null;renderChats();}
+function renderMessages(){let box=document.getElementById('messages');box.innerHTML='';let msgs=allMessages[currentChatId]||[];msgs.forEach(m=>{let d=document.createElement('div');d.className='bubble '+(m.from==='me'?'me':'other');d.innerHTML=`${m.text}<span class="time">${m.time}</span>`;box.appendChild(d);});box.scrollTop=box.scrollHeight;}
+function sendMsg(){let inp=document.getElementById('msgInput');let txt=inp.value.trim();if(!txt||!currentChatId)return;let now=new Date();let t=now.getHours()+':'+String(now.getMinutes()).padStart(2,'0');if(!allMessages[currentChatId])allMessages[currentChatId]=[];allMessages[currentChatId].push({from:'me',text:txt,time:t});contacts.find(c=>c.id===currentChatId).last=txt;saveAll();inp.value='';renderMessages();setTimeout(()=>{allMessages[currentChatId].push({from:'other',text:'Got it! 👍',time:t});saveAll();if(currentChatId)renderMessages();},800);}
+function shareApp(){let link='https://siyabongast25-ai.github.io/Sia-Chat/';navigator.clipboard.writeText(link).then(()=>alert('Link copied: '+link)).catch(()=>alert(link));}
+let localStream,peer,call,roomId;const localVideo=document.getElementById('localVideo');const remoteVideo=document.getElementById('remoteVideo');
+async function getMedia(){try{localStream=await navigator.mediaDevices.getUserMedia({video:true,audio:true});localVideo.srcObject=localStream;document.getElementById('videoStatus').textContent='Camera ready - Enter room and JOIN';}catch(e){document.getElementById('videoStatus').textContent='Camera blocked - Allow camera';}}getMedia();
+function joinRoom(){roomId=document.getElementById('roomInput').value.trim();if(!roomId){alert('Enter room name!');return;}peer=new Peer('sia-'+roomId,{config:{iceServers:[{urls:'stun:stun.l.google.com:19302'}]}});peer.on('open',id=>{document.getElementById('videoStatus').textContent='In room: '+roomId+' - Ask friend to join same room';});peer.on('call',c=>{call=c;call.answer(localStream);call.on('stream',s=>{remoteVideo.srcObject=s;document.getElementById('videoStatus').textContent='Connected! Video call active';});});}
+function startCall(){if(!peer){alert('JOIN room first!');return;}peer.call('sia-'+roomId,localStream).on('stream',s=>{remoteVideo.srcObject=s;document.getElementById('videoStatus').textContent='In Call!';});}
+function endCall(){if(call)call.close();remoteVideo.srcObject=null;document.getElementById('videoStatus').textContent='Call ended';}
+function toggleMute(){if(localStream)localStream.getAudioTracks().forEach(t=>t.enabled=!t.enabled);}
+function toggleCamera(){if(localStream)localStream.getVideoTracks().forEach(t=>t.enabled=!t.enabled);}
+renderChats();
 </script>
 </body>
-  </html>
+                                                                   </html>
