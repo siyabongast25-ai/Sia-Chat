@@ -1,1 +1,72 @@
-https://siyabongast25-ai.github.io/Sia-Chat/?v=finalvideo
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sia-Chat Video Call</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:system-ui}
+body{background:#0f0f0f;color:#fff;min-height:100vh;display:flex;flex-direction:column}
+header{background:#1a1a1a;padding:12px 16px;display:flex;align-items:center;gap:12px;border-bottom:1px solid #333}
+.logo{width:40px;height:40px;background:#ff0050;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900}
+.header-info{flex:1}
+.header-info h1{font-size:16px}
+.header-info p{font-size:12px;color:#0f0}
+main{flex:1;display:flex;flex-direction:column;padding:10px;gap:10px}
+.videos{display:grid;grid-template-columns:1fr 1fr;gap:10px;height:55vh}
+.video-box{background:#1e1e1e;border-radius:12px;position:relative;overflow:hidden;border:1px solid #333}
+video{width:100%;height:100%;object-fit:cover;background:#000}
+.label{position:absolute;bottom:8px;left:8px;background:rgba(0,0,0,0.7);padding:4px 10px;border-radius:20px;font-size:12px}
+.controls{display:flex;justify-content:center;gap:14px;padding:16px;background:#1a1a1a;border-top:1px solid #333}
+.btn{width:54px;height:54px;border-radius:50%;border:none;font-size:22px;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.btn-call{background:#00c853;color:#fff}
+.btn-end{background:#ff1744;color:#fff}
+.btn-mute{background:#333;color:#fff}
+.btn-off{background:#555 !important}
+.room-box{background:#1e1e1e;padding:12px;border-radius:10px;display:flex;gap:8px;align-items:center}
+.room-box input{flex:1;background:#000;border:1px solid #333;color:#fff;padding:10px;border-radius:8px}
+.room-box button{background:#ff0050;color:#fff;border:none;padding:10px 14px;border-radius:8px;font-weight:bold}
+.chat{background:#1e1e1e;border-radius:10px;padding:10px;height:22vh;overflow:auto}
+.msg{margin:6px 0;font-size:13px}
+</style>
+</head>
+<body>
+<header>
+<div class="logo">SC</div>
+<div class="header-info"><h1>Sia-Chat Video Call</h1><p id="status">Ready</p></div>
+</header>
+<main>
+<div class="room-box">
+<input id="roomInput" placeholder="Enter room name e.g. siya123">
+<button onclick="joinRoom()">JOIN</button>
+</div>
+<div class="videos">
+<div class="video-box"><video id="localVideo" autoplay muted playsinline></video><div class="label">You</div></div>
+<div class="video-box"><video id="remoteVideo" autoplay playsinline></video><div class="label">Friend</div></div>
+</div>
+<div class="chat" id="chatBox"><div class="msg">Welcome! Enter room name and JOIN</div></div>
+</main>
+<div class="controls">
+<button class="btn btn-mute" id="muteBtn" onclick="toggleMute()">Mic</button>
+<button class="btn btn-call" onclick="startCall()">Call</button>
+<button class="btn btn-end" onclick="endCall()">End</button>
+<button class="btn btn-mute" onclick="toggleCamera()">Cam</button>
+</div>
+<script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
+<script>
+let localStream,peer,call,roomId,isMuted=false,camOff=false;
+const localVideo=document.getElementById('localVideo');
+const remoteVideo=document.getElementById('remoteVideo');
+const statusEl=document.getElementById('status');
+const chatBox=document.getElementById('chatBox');
+function log(m){const d=document.createElement('div');d.className='msg';d.textContent=m;chatBox.appendChild(d);chatBox.scrollTop=chatBox.scrollHeight;}
+async function getMedia(){try{localStream=await navigator.mediaDevices.getUserMedia({video:true,audio:true});localVideo.srcObject=localStream;log('Camera ready');}catch(e){log('Camera error: '+e.message);}}
+getMedia();
+function joinRoom(){roomId=document.getElementById('roomInput').value.trim();if(!roomId){alert('Enter room name!');return;}peer=new Peer('sia-'+roomId,{config:{iceServers:[{urls:'stun:stun.l.google.com:19302'}]}});peer.on('open',id=>{log('Joined room: '+roomId);statusEl.textContent='In room: '+roomId;});peer.on('call',c=>{call=c;call.answer(localStream);call.on('stream',s=>{remoteVideo.srcObject=s;log('Friend connected!');statusEl.textContent='Connected!';});});}
+function startCall(){if(!peer){alert('Join room first!');return;}log('Calling...');const c=peer.call('sia-'+roomId,localStream);c.on('stream',s=>{remoteVideo.srcObject=s;log('Call connected!');statusEl.textContent='In Call!';});}
+function endCall(){if(call)call.close();remoteVideo.srcObject=null;log('Call ended');}
+function toggleMute(){isMuted=!isMuted;localStream.getAudioTracks().forEach(t=>t.enabled=!isMuted);log(isMuted?'Muted':'Unmuted');}
+function toggleCamera(){camOff=!camOff;localStream.getVideoTracks().forEach(t=>t.enabled=!camOff);log(camOff?'Camera off':'Camera on');}
+</script>
+</body>
+  </html>
