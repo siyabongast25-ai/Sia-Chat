@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Sia-Chat Super App</title>
+  <link rel="manifest" href="manifest.json">
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:system-ui}
 body{background:#111b21;color:#e9edef;min-height:100vh;display:flex;flex-direction:column}
@@ -52,7 +53,7 @@ function doLogin(){let n=document.getElementById('nameInput').value.trim();let s
 if(user){document.getElementById('loginScreen').style.display='none';document.getElementById('userStatus').textContent='● '+user.name+' - '+user.status;}
 function switchTab(t){document.querySelectorAll('.tab').forEach(e=>e.classList.remove('active'));document.querySelectorAll('.view').forEach(e=>e.classList.remove('active'));if(t==='chats'){document.querySelectorAll('.tab')[0].classList.add('active');document.getElementById('view-chats').classList.add('active');}if(t==='find'){document.querySelectorAll('.tab')[1].classList.add('active');document.getElementById('view-find').classList.add('active');renderFind();}if(t==='video'){document.querySelectorAll('.tab')[2].classList.add('active');document.getElementById('view-video').classList.add('active');}}
 function renderChats(){let q=(document.getElementById('searchInput').value||'').toLowerCase();let list=document.getElementById('chatList');list.innerHTML='';contacts.forEach(c=>{if(q&&!c.name.toLowerCase().includes(q))return;let msgs=allMessages[c.id]||[];let last=msgs.length?msgs[msgs.length-1].text:c.last;let time=msgs.length?msgs[msgs.length-1].time:'';let div=document.createElement('div');div.className='chat-item';div.onclick=()=>openChat(c.id);div.innerHTML=`<div class="avatar">${c.avatar}</div><div class="ci-info"><div class="ci-top"><span class="ci-name">${c.name}</span><span class="ci-time">${time}</span></div><div class="ci-last">${last}</div></div>`;list.appendChild(div);});}
-function renderFind(){let q=(document.getElementById('searchFind').value||'').toLowerCase();let list=document.getElementById('findList');list.innerHTML='';contacts.forEach(c=>{if(c.id==='sia_group')return;if(q&&!c.name.toLowerCase().includes(q))return;let div=document.createElement('div');div.className='chat-item';div.onclick=()=>openChat(c.id);div.innerHTML=`<div class="avatar">${c.avatar}</div><div class="ci-info"><div class="ci-top"><span class="ci-name">${c.name}</span></div><div class="ci-last">Tap to chat with ${c.name} - Offline ready</div></div>`;list.appendChild(div);});}
+function ren noderFind(){let q=(document.getElementById('searchFind').value||'').toLowerCase();let list=document.getElementById('findList');list.innerHTML='';contacts.forEach(c=>{if(c.id==='sia_group')return;if(q&&!c.name.toLowerCase().includes(q))return;let div=document.createElement('div');div.className='chat-item';div.onclick=()=>openChat(c.id);div.innerHTML=`<div class="avatar">${c.avatar}</div><div class="ci-info"><div class="ci-top"><span class="ci-name">${c.name}</span></div><div class="ci-last">Tap to chat with ${c.name} - Offline ready</div></div>`;list.appendChild(div);});}
 function openChat(id){currentChatId=id;let c=contacts.find(x=>x.id===id);document.getElementById('cwName').textContent=c.name;document.getElementById('cwAvatar').textContent=c.avatar;document.getElementById('chatWindow').classList.add('open');renderMessages();}
 function closeChat(){document.getElementById('chatWindow').classList.remove('open');currentChatId=null;renderChats();}
 function renderMessages(){let box=document.getElementById('messages');box.innerHTML='';let msgs=allMessages[currentChatId]||[];msgs.forEach(m=>{let d=document.createElement('div');d.className='bubble '+(m.from==='me'?'me':'other');d.innerHTML=`${m.text}<span class="time">${m.time}</span>`;box.appendChild(d);});box.scrollTop=box.scrollHeight;}
@@ -67,5 +68,10 @@ function toggleMute(){if(localStream)localStream.getAudioTracks().forEach(t=>t.e
 function toggleCamera(){if(localStream)localStream.getVideoTracks().forEach(t=>t.enabled=!t.enabled);}
 renderChats();
 </script>
+  <script>
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js');
+}
+  </script>
 </body>
                                                                    </html>
