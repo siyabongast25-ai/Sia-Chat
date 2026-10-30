@@ -1,54 +1,85 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sia-Chat v11 - Fixed</title>
-<style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:system-ui}
-body{background:#0f172a;color:#fff;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
-.card{background:#1e293b;border-radius:20px;padding:28px;width:100%;max-width:420px;box-shadow:0 10px 30px rgba(0,0,0,.4)}
-h1{font-size:28px;margin-bottom:14px;text-align:center}
-input{width:100%;padding:14px 16px;border-radius:12px;border:0;background:#334155;color:#fff;font-size:16px;margin-bottom:12px;outline:none}
-button{width:100%;padding:14px;border-radius:12px;border:0;font-weight:800;font-size:16px;cursor:pointer}
-.primary{background:#14b8a6;color:#fff}
-.secondary{background:#0ea5e9;margin-top:10px}
-.small{font-size:12px;color:#94a3b8;margin-top:10px;text-align:center}
-#main{display:none;width:100%;max-width:480px}
-.contact{background:#334155;padding:12px 14px;border-radius:12px;margin:8px 0;display:flex;justify-content:space-between}
-.list{max-height:55vh;overflow:auto;margin-top:10px}
-</style>
-</head>
-<body>
-<div id="welcome" class="card">
-<h1>Welcome to Sia-Chat</h1>
+<html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sia-Chat v12 + Sia Bot</title><style>*{margin:0;padding:0;box-sizing:border-box;font-family:system-ui}
+body{background:#0f172a;color:#fff;min-height:100vh;display:flex;justify-content:center;padding:0}
+.card{background:#1e293b;border-radius:20px;padding:22px;width:100%;max-width:460px;margin:14px}
+h1{font-size:24px;text-align:center;margin-bottom:8px}input{width:100%;padding:13px 16px;border-radius:12px;border:0;background:#334155;color:#fff;font-size:16px;margin-bottom:10px}
+button{width:100%;padding:13px;border-radius:12px;border:0;font-weight:800;font-size:15px}
+.primary{background:#14b8a6;color:#fff}.secondary{background:#0ea5e9;margin-top:8px}
+.small{font-size:11px;color:#94a3b8;margin-top:8px;text-align:center}
+.contact{background:#334155;padding:12px 14px;border-radius:12px;margin:8px 0;display:flex;justify-content:space-between;align-items:center}
+.sia-contact{background:linear-gradient(135deg,#14b8a6,#0ea5e9);border:2px solid #5eead4}
+.list{max-height:50vh;overflow:auto;margin-top:10px}
+#main,#chatScreen{display:none;width:100%;max-width:480px}#welcome{display:flex;align-items:center;justify-content:center;min-height:100vh;width:100%;padding:20px}
+.chat-head{background:#1e293b;padding:12px 16px;display:flex;gap:10px;position:sticky;top:0}
+.chat-head button{background:#334155;width:auto;padding:8px 14px;border-radius:20px}
+.msgs{padding:14px;height:calc(100vh - 120px);overflow:auto;display:flex;flex-direction:column;gap:10px}
+.bubble{max-width:82%;padding:10px 14px;border-radius:16px;font-size:15px}
+.me{align-self:flex-end;background:#14b8a6}.them{align-self:flex-start;background:#334155}
+.inputRow{position:fixed;bottom:0;left:0;right:0;max-width:480px;margin:0 auto;display:flex;gap:8px;padding:10px;background:#0f172a}
+.inputRow input{margin:0;flex:1}.inputRow button{width:70px;background:#14b8a6}</style></head><body>
+<div id="welcome"><div class="card"><h1>Sia-Chat 💬</h1>
 <input id="nameInput" placeholder="Your name e.g. Siyabonga">
-<input id="locInput" placeholder="Northam - Limpopo" value="Northam - Limpopo">
-<button class="primary" id="startBtn">START CHATTING</button>
-<p class="small">Works offline! v11 Fixed</p>
-<p class="small" id="err"></p>
-</div>
-<div id="main"><div class="card">
-<h1 style="font-size:22px">Sia-Chat 💬</h1>
-<p class="small" id="hello"></p>
+<input id="locInput" value="Northam - Limpopo">
+<button class="primary" onclick="startChat()">START CHATTING</button>
+<p class="small">v12 with Sia Bot - works offline</p></div></div>
+<div id="main"><div class="card"><h1>Sia-Chat 💬</h1><p class="small" id="hello"></p>
+<div class="contact sia-contact" onclick="openChat('Sia Bot 🤖','SIA_BOT')">
+<div><b>Sia Bot 🤖</b><br><span style="font-size:12px">Your AI friend - Always online</span></div><span style="background:#0f172a;padding:2px 8px;border-radius:20px;font-size:11px;color:#5eead4">AI</span></div>
 <button class="primary" id="importBtn">📱 Import All From Phone</button>
-<button class="secondary" id="addBtn" style="background:#0ea5e9">➕ Add Contact Manually</button>
-<div class="list" id="contactList"></div>
-<p class="small" id="status"></p>
-<button style="background:#475569;margin-top:12px" id="resetBtn">Reset / Logout</button>
-</div></div>
+<button class="secondary" id="addBtn">➕ Add Contact Manually</button>
+<div class="list" id="contactList"></div><p class="small" id="status"></p>
+<button style="background:#475569;margin-top:10px" onclick="logout()">Reset / Logout</button></div></div>
+<div id="chatScreen"><div class="chat-head"><button onclick="backToList()">← Back</button>
+<div><b id="chatName"></b><br><span style="font-size:11px;color:#94a3b8" id="chatStatus"></span></div></div>
+<div class="msgs" id="msgs"></div><div class="inputRow">
+<input id="msgInput" placeholder="Type message..." onkeydown="if(event.key==='Enter')sendMsg()">
+<button onclick="sendMsg()">Send</button></div></div>
 <script>
 const $=id=>document.getElementById(id);
-const LS_KEY='sia_contacts_v11',NAME_KEY='sia_name_v11';
-function loadContacts(){try{return JSON.parse(localStorage.getItem(LS_KEY)||'[]')}catch(e){return[]}}
-function saveContacts(c){localStorage.setItem(LS_KEY,JSON.stringify(c))}
-function render(){const list=$('contactList');const contacts=loadContacts();if(!contacts.length){list.innerHTML='<p class=small>No contacts yet. Tap Import above.</p>';return}list.innerHTML=contacts.map(c=>`<div class=contact><div><b>${c.name}</b><br><span style="font-size:12px;color:#94a3b8">${c.tel||''}</span></div></div>`).join('');$('status').textContent=contacts.length+' contacts saved'}
-function showMain(name){$('welcome').style.display='none';$('main').style.display='block';$('hello').textContent='Hi, '+name+'!';render()}
-(function(){const saved=localStorage.getItem(NAME_KEY);if(saved){$('nameInput').value=saved;showMain(saved)}})();
-$('startBtn').addEventListener('click',()=>{const name=$('nameInput').value.trim();if(!name){$('err').textContent='Please type your name';return}localStorage.setItem(NAME_KEY,name);showMain(name)});
-$('importBtn').addEventListener('click',async()=>{const s=$('status');if(!('contacts' in navigator&&'ContactsManager' in window)){s.textContent='Phone does not support direct import. Use Add Manually. Try Chrome Android.';return}try{s.textContent='Opening phone contacts...';const contacts=await navigator.contacts.select(['name','tel'],{multiple:true});if(!contacts.length){s.textContent='No contacts selected';return}let existing=loadContacts();let added=0;contacts.forEach(c=>{const name=(c.name&&c.name[0])||'Unknown';const tel=(c.tel&&c.tel[0])||'';if(!existing.find(e=>e.name===name&&e.tel===tel)){existing.push({name,tel});added++}});saveContacts(existing);render();s.textContent='✅ Imported '+added+' contacts! Total: '+existing.length}catch(err){$('status').textContent='Cancelled or blocked. Try again and Allow.'}});
-$('addBtn').addEventListener('click',()=>{const n=prompt('Contact name:');if(!n)return;const t=prompt('Phone number (optional):')||'';let c=loadContacts();c.push({name:n,tel:t});saveContacts(c);render()});
-$('resetBtn').addEventListener('click',()=>{if(confirm('Clear all?')){localStorage.removeItem(LS_KEY);localStorage.removeItem(NAME_KEY);location.reload()}});
-</script>
-</body>
-  </html>
+const LS_KEY='sia_contacts_v12',NAME_KEY='sia_name_v12',MSG_KEY='sia_msgs_v12';
+let currentChat=null,myName='';
+function load(k,d){try{return JSON.parse(localStorage.getItem(k)||JSON.stringify(d))}catch(e){return d}}
+function save(k,v){localStorage.setItem(k,JSON.stringify(v))}
+function loadContacts(){return load(LS_KEY,[])}function saveContacts(c){save(LS_KEY,c)}
+function renderContacts(){const list=$('contactList');const contacts=loadContacts();
+if(!contacts.length){list.innerHTML='<p class=small>No contacts. Import or add.</p>';return}
+list.innerHTML=contacts.map(c=>`<div class=contact onclick="openChat('${c.name.replace(/'/g,'')}','${c.tel}')"><div><b>${c.name}</b><br><span style="font-size:12px;color:#94a3b8">${c.tel||''}</span></div><span>💬</span></div>`).join('');
+$('status').textContent=contacts.length+' contacts saved'}
+function startChat(){let name=$('nameInput').value.trim();if(!name)name='Siyabonga';myName=name;
+localStorage.setItem(NAME_KEY,name);$('hello').textContent='Hi, '+name+'!';show('main');renderContacts()}
+function show(id){$('welcome').style.display='none';$('main').style.display='none';$('chatScreen').style.display='none';
+if(id==='welcome')$('welcome').style.display='flex';else $(id).style.display='block'}
+function backToList(){show('main');currentChat=null;renderContacts()}
+function openChat(name,tel){currentChat={name,tel};$('chatName').textContent=name;
+$('chatStatus').textContent=tel==='SIA_BOT'?'Sia AI • Offline':' '+tel;show('chatScreen');loadMsgs()}
+function loadMsgs(){const all=load(MSG_KEY,{});const msgs=all[currentChat.name]||[];const box=$('msgs');
+if(currentChat.name==='Sia Bot 🤖'&&msgs.length===0){const welcome=[`Hey ${myName||'Siyabonga'}! 👋 I'm Sia Bot - your AI friend built into Sia-Chat.`,`I'm from Northam - Limpopo too! I work OFFLINE, no data needed.`,`Ask me anything: about your contacts, coding, love, school, business?`];
+all[currentChat.name]=welcome.map(t=>({from:'them',text:t}));save(MSG_KEY,all)}renderMsgs()}
+function renderMsgs(){const all=load(MSG_KEY,{});const msgs=all[currentChat.name]||[];
+$('msgs').innerHTML=msgs.map(m=>`<div class="bubble ${m.from==='me'?'me':'them'}">${m.text}</div>`).join('');
+$('msgs').scrollTop=$('msgs').scrollHeight}
+function sendMsg(){const input=$('msgInput');const txt=input.value.trim();if(!txt||!currentChat)return;
+const all=load(MSG_KEY,{});if(!all[currentChat.name])all[currentChat.name]=[];
+all[currentChat.name].push({from:'me',text:txt});input.value='';save(MSG_KEY,all);renderMsgs();
+if(currentChat.tel==='SIA_BOT'){setTimeout(()=>{replyFromSia(txt)},600)}else{
+setTimeout(()=>{const a=load(MSG_KEY,{});a[currentChat.name].push({from:'them',text:'(Saved offline) I will get this when I open Sia-Chat 💬'});save(MSG_KEY,a);renderMsgs()},800)}}
+function replyFromSia(userText){const t=userText.toLowerCase();let reply='';const name=myName||'Siyabonga';
+if(t.includes('hi')||t.includes('hello')||t.includes('hey')||t.includes('dumela')){reply=`Dumela ${name}! 😊 Sharp? How can I help?`}
+else if(t.includes('who are you')){reply=`I'm Sia Bot 🤖 - built inside YOUR Sia-Chat! I live offline in your phone.`}
+else if(t.includes('love')||t.includes('babe')){reply=`Ayy 😏 love? Is this about Babe 🦋 in your contacts? 😂 Tell me!`}
+else if(t.includes('import')){reply=`Go back, tap Import All, Select All at top, Done. You have ${loadContacts().length} now.`}
+else if(t.includes('northam')||t.includes('limpopo')){reply=`Northam - Limpopo! Limpopo stand up! 🔥 Bushbuckridge to the world!`}
+else if(t.includes('help')){reply=`I can: 1) Help add contacts 2) Chat offline 3) Give ideas for v13 4) Just vibe. What you need?`}
+else{reply=`You said "${userText}" - interesting ${name}! 🤔 Tell me more?`}
+const all=load(MSG_KEY,{});all[currentChat.name].push({from:'them',text:reply});save(MSG_KEY,all);renderMsgs()}
+(function(){const saved=localStorage.getItem(NAME_KEY)||'';if(saved){$('nameInput').value=saved;myName=saved;$('hello').textContent='Hi, '+saved+'!';show('main');renderContacts()}})();
+$('importBtn')?.addEventListener('click',async()=>{const s=$('status');
+if(!('contacts' in navigator)){s.textContent='Use Add Manually. Try Chrome.';return}
+try{s.textContent='Opening...';const contacts=await navigator.contacts.select(['name','tel'],{multiple:true});
+let existing=loadContacts();let added=0;contacts.forEach(c=>{const name=(c.name&&c.name[0])||'Unknown';const tel=(c.tel&&c.tel[0])||'';if(!existing.find(e=>e.name===name&&e.tel===tel)){existing.push({name,tel});added++}});
+saveContacts(existing);renderContacts();s.textContent=`✅ Imported ${added}! Total: ${existing.length}`}catch(e){$('status').textContent='Cancelled.'}});
+$('addBtn')?.addEventListener('click',()=>{const n=prompt('Name:');if(!n)return;const t=prompt('Phone:')||'';let c=loadContacts();c.push({name:n,tel:t});saveContacts(c);renderContacts()});
+function logout(){if(confirm('Clear all?')){localStorage.removeItem(LS_KEY);localStorage.removeItem(NAME_KEY);localStorage.removeItem(MSG_KEY);location.reload()}}
+window.startChat=startChat;window.openChat=openChat;window.backToList=backToList;window.sendMsg=sendMsg;window.logout=logout;
+</script></body></html>
