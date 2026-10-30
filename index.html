@@ -3,43 +3,66 @@
 <head>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <style>
-body{background:#0f172a;color:#fff;font-family:Arial;text-align:center;padding:20px}
-input{padding:14px;width:85%;margin:8px;border-radius:10px;border:0;font-size:16px}
-button{background:#14b8a6;color:#fff;padding:14px 28px;border:0;border-radius:10px;font-weight:bold;font-size:17px}
-#chat{display:none}
-#msgs{height:50vh;overflow:auto;background:#1e293b;border-radius:12px;padding:12px;margin:15px 0;text-align:left}
-.msg{margin:8px 0;padding:10px;background:#334155;border-radius:8px}
+body{background:#0f172a;color:#fff;font-family:Arial;margin:0}
+.top{background:#1e293b;padding:15px;display:flex;justify-content:space-between;align-items:center}
+.left{width:35%;background:#1e293b;height:100vh;overflow:auto;border-right:1px solid #334155;float:left}
+.right{width:65%;float:left}
+.c{padding:12px;border-bottom:1px solid #334155;cursor:pointer;font-size:14px}
+.c:hover{background:#334155}
+input{padding:10px;width:68%;border-radius:8px;border:0;margin:5px}
+button{background:#14b8a6;color:#fff;padding:10px 16px;border:0;border-radius:8px;font-weight:bold}
+#msgs{height:60vh;overflow:auto;padding:12px;text-align:left}
+.msg{margin:8px 0;padding:10px;background:#334155;border-radius:8px;font-size:14px}
+#login{text-align:center;padding:30px}
 </style>
 </head>
 <body>
 <div id="login">
-<h2>Welcome to Sia-Chat</h2>
-<p>Chat with people around Bushbuckridge</p>
-<input id="name" placeholder="Your Name - Siyabonga">
-<input id="town" placeholder="Town - Mpumalanga"><br><br>
-<button onclick="go()">START CHATTING</button>
-<p style="opacity:.6">Works offline! No data needed</p>
+<h2>Sia-Chat v2 with Contacts</h2>
+<p>Now with contacts list!</p>
+<input id="name" placeholder="Your Name"><br><br>
+<button onclick="go()">START</button>
 </div>
-<div id="chat">
-<h3 id="hi"></h3>
+
+<div id="app" style="display:none">
+<div class="top"><b id="hi"></b><button onclick="addContact()">+ Add</button></div>
+<div class="left" id="contacts"></div>
+<div class="right">
 <div id="msgs"></div>
-<input id="text" placeholder="Type message...">
+<input id="text" placeholder="Type...">
 <button onclick="send()">Send</button>
 </div>
+</div>
+
 <script>
+let contacts=JSON.parse(localStorage.getItem('sia-contacts')||'["Sia-Bot","Thabo - Acornhoek","Lerato - Bushbuckridge"]');
+let current=contacts[0];
 function go(){
 let n=document.getElementById('name').value;
 if(!n){alert('Enter name');return;}
-document.getElementById('login').style.display='none';
-document.getElementById('chat').style.display='block';
-document.getElementById('hi').innerText='Hi '+n+'! LIVE!';
-add('Sia-Bot','Welcome '+n+'! Your app WORKS now!');
+login.style.display='none';
+app.style.display='block';
+hi.innerText='Hi '+n;
+renderContacts();
+openChat(current);
+}
+function renderContacts(){
+let h='';
+contacts.forEach(c=>{
+h+='<div class=\"c\" onclick=\"openChat(\\''+c+'\\')\">'+c+'</div>';
+});
+document.getElementById('contacts').innerHTML=h;
+}
+function openChat(name){
+current=name;
+msgs.innerHTML='';
+add('System','Chat with '+name);
 }
 function add(w,t){
 let d=document.createElement('div');
 d.className='msg';
 d.innerHTML='<b>'+w+':</b> '+t;
-document.getElementById('msgs').appendChild(d);
+msgs.appendChild(d);
 }
 function send(){
 let i=document.getElementById('text');
@@ -47,8 +70,15 @@ if(!i.value)return;
 add('You',i.value);
 let v=i.value;
 i.value='';
-setTimeout(function(){add('Sia-Bot','You said: '+v);},600);
+setTimeout(()=>add(current,'You said: '+v),600);
+}
+function addContact(){
+let n=prompt('Contact name? e.g. Mom');
+if(!n)return;
+contacts.push(n);
+localStorage.setItem('sia-contacts',JSON.stringify(contacts));
+renderContacts();
 }
 </script>
 </body>
-</html>
+  </html>
