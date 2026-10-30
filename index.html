@@ -1,1 +1,54 @@
-<!DOCTYPE html><html><body style=background:#0f172a;color:#fff;text-align:center;padding:20px><h2>Sia-Chat FIXED</h2><input id=n placeholder=Name><br><br><button id=s>START</button><div id=m></div><script>s.onclick=()=>m.innerHTML='Hi '+n.value+' LIVE!'</script>
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+body{background:#0f172a;color:#fff;font-family:Arial;text-align:center;padding:20px}
+input{padding:14px;width:85%;margin:8px;border-radius:10px;border:0;font-size:16px}
+button{background:#14b8a6;color:#fff;padding:14px 28px;border:0;border-radius:10px;font-weight:bold;font-size:17px}
+#chat{display:none}
+#msgs{height:50vh;overflow:auto;background:#1e293b;border-radius:12px;padding:12px;margin:15px 0;text-align:left}
+.msg{margin:8px 0;padding:10px;background:#334155;border-radius:8px}
+</style>
+</head>
+<body>
+<div id="login">
+<h2>Welcome to Sia-Chat</h2>
+<p>Chat with people around Bushbuckridge</p>
+<input id="name" placeholder="Your Name - Siyabonga">
+<input id="town" placeholder="Town - Mpumalanga"><br><br>
+<button onclick="go()">START CHATTING</button>
+<p style="opacity:.6">Works offline! No data needed</p>
+</div>
+<div id="chat">
+<h3 id="hi"></h3>
+<div id="msgs"></div>
+<input id="text" placeholder="Type message...">
+<button onclick="send()">Send</button>
+</div>
+<script>
+function go(){
+let n=document.getElementById('name').value;
+if(!n){alert('Enter name');return;}
+document.getElementById('login').style.display='none';
+document.getElementById('chat').style.display='block';
+document.getElementById('hi').innerText='Hi '+n+'! LIVE!';
+add('Sia-Bot','Welcome '+n+'! Your app WORKS now!');
+}
+function add(w,t){
+let d=document.createElement('div');
+d.className='msg';
+d.innerHTML='<b>'+w+':</b> '+t;
+document.getElementById('msgs').appendChild(d);
+}
+function send(){
+let i=document.getElementById('text');
+if(!i.value)return;
+add('You',i.value);
+let v=i.value;
+i.value='';
+setTimeout(function(){add('Sia-Bot','You said: '+v);},600);
+}
+</script>
+</body>
+</html>
